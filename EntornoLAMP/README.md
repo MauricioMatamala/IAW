@@ -1,5 +1,5 @@
  
-#TEMA 1. Preparar un entorno LAMP
+# TEMA 1. Preparar un entorno LAMP
 
 Las siglas LAMP responden a **L**inux, **A**pache, **M**ariaDB/MySQL y **P**HP/Python/Perl
 

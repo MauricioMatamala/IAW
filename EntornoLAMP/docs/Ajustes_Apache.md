@@ -76,6 +76,6 @@ Hay que reiniciar el servidor para aplicar.
 </VirtualHost>
 ```
 
-**Actividad 5. ** Securiza *phpmyadmin* con htaccess
+**Actividad 5.** Securiza *phpmyadmin* con htaccess
 
-**Actividad 6. ** Crea dos virtualhosts basados en nombre. Asegúrate de que sus directorios raíz están fuera del directorio por defecto de apache. En cada virtualhost, incluye un archivo html sencillo que permite distinguir los sitios.
+**Actividad 6.** Crea dos virtualhosts basados en nombre. Asegúrate de que sus directorios raíz están fuera del directorio por defecto de apache. En cada virtualhost, incluye un archivo html sencillo que permite distinguir los sitios.

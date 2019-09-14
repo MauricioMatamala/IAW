@@ -194,11 +194,11 @@ Podemos usar el usuario  *root* o bien el recién creado *phpmyadminuser*
 	
 ![Contraseña con htaccess](https://www.ostechnix.com/wp-content/uploads/2019/02/phpmyadmin-10-1024x334.png)
 
-** Actividad 1. ** Prepara un entorno LAMP similar al expuesto en una máquina virtual con Ubuntu Server.
+**Actividad 1.** Prepara un entorno LAMP similar al expuesto en una máquina virtual con Ubuntu Server.
 
-** Actividad 2. ** Crea un usuario llamado *MiCMS_user* que tenga permisos para realizar operaciones *CRUD* sobre la base de datos *MiCMS*
+**Actividad 2.** Crea un usuario llamado *MiCMS_user* que tenga permisos para realizar operaciones *CRUD* sobre la base de datos *MiCMS*
 
-** Actividad 3. ** Realiza las siguientes tareas utilizando phpMyAdmin:
+**Actividad 3.** Realiza las siguientes tareas utilizando phpMyAdmin:
 
 - Crea una base de datos utilizando *phpMyAdmin* que se llame *MiCMS*. 
 - Dentro, crea una tabla llamada 'Tareas' con los campos siguientes:
@@ -207,6 +207,6 @@ Podemos usar el usuario  *root* o bien el recién creado *phpmyadminuser*
 	- **descripción**, cadena de texto de 100 caracteres
 - Inserta algunas filas de la tabla
 	
-** Actividad 4. ** phpMyAdmin muestra un warning (*Warning in ./libraries/sql.lib.php#613 count(): Parameter must be an array or an object that implements Countable*) cuando se accede al contenido de una tabla. Encuentra el motivo del problema y soluciónalo.
+**Actividad 4.** phpMyAdmin muestra un warning (*Warning in ./libraries/sql.lib.php#613 count(): Parameter must be an array or an object that implements Countable*) cuando se accede al contenido de una tabla. Encuentra el motivo del problema y soluciónalo.
 
 [Ajustes adicionales de Apache](docs/Ajustes_Apache.md)

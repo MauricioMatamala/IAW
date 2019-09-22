@@ -17,15 +17,16 @@ Usaremos como sistema operativo Ubuntu Server, por ser el [más usado](https://w
 
 ## Instalar apache
 
-###Actualizar los repositorios
+### Actualizar los repositorios
 	$ sudo apt update
 	$ sudo apt upgrade
 	
-###Instalar Apache
+### Instalar Apache
 	$ sudo apt install apache2
 	$ sudo systemctl status apache2
 
-###Configurar el firewall para permitir a Apache
+### Configurar el firewall para permitir a Apache
+
 Si  hemos habilitado el [firewall de Ubuntu](docs/firewall.md)
 
 	$ sudo ufw app list
@@ -210,3 +211,106 @@ Podemos usar el usuario  *root* o bien el recién creado *phpmyadminuser*
 **Actividad 4.** phpMyAdmin muestra un warning (*Warning in ./libraries/sql.lib.php#613 count(): Parameter must be an array or an object that implements Countable*) cuando se accede al contenido de una tabla. Encuentra el motivo del problema y soluciónalo.
 
 [Ajustes adicionales de Apache](docs/Ajustes_Apache.md)
+
+# Vsftp
+
+Necesitaremos un servicio de transferencia de archivos, que utilizará el desarrollador para subir sus archivos.
+
+## Instalación
+
+    sudo apt-get update
+    sudo apt-get install vsftpd
+
+Cuando la instalación esté completa, haremos una copia de seguridad del archivo de configuración inicial.
+
+    sudo cp /etc/vsftpd.conf /etc/vsftpd.conf.orig
+
+## Apertura del firewall
+
+    sudo ufw allow 20/tcp
+    sudo ufw allow 21/tcp
+    sudo ufw allow 990/tcp
+    sudo ufw allow 40000:50000/tcp
+
+Para comprobar que todo está bien, escribiremos:
+
+    sudo ufw status
+
+## Directorio del usuario
+
+El directorio donde el usuario *ftp* subirá sus archivos debe coincidir con el directorio del *virtualhost*. Dicho directorio puede estar donde deseemos. Podemos usar el comando *adduser* o el comando *useradd*.
+
+Utilizamos un directorio llamado *ftp* sin permisos de escritura a modo de jaula *chroot*
+
+    sudo mkdir /home/usuario/ftp
+    sudo chown nobody:nogroup /home/usuario/ftp
+    sudo chmod 555 /home/usuario/ftp
+
+El directorio *files* (que puede llamarse de otra forma) será el destinado a subir archivos por *ftp*
+
+    sudo mkdir /home/usuario/ftp/files
+    sudo chown usuario:usuario /home/usuario/ftp/files
+
+## Configuración del acceso
+
+	sudo nano /etc/vsftpd.conf
+
+Desactivamos usuarios anónimos
+
+	anonymous_enable=NO
+
+Permitimos a los usuarios locales conectarnos
+
+	local_enable=YES
+
+Damos permiso de escritura a los usuarios
+
+	write_enable=YES	
+
+Para enjaular a los usuarios en su cuenta y evitar que puedan acceder a otras partes del sistema de archivos del servidor, hacemos lo siguiente:
+
+	chroot_local_user=YES
+
+Añadimos *user_sub_token* para declarar el directorio del usuario creado y de cualquier otro que se cree en lo sucesivo.
+
+	user_sub_token=$USER
+	local_root=/home/$USER/ftp
+
+El rango de puertos para el modo pasivo que abrimos en el firewall es 40000 - 50000. Indicamos a *vsftpd* que utilice este rango.
+
+	pasv_min_port=40000
+	pasv_max_port=50000
+
+Dado que queremos permitir el acceso ftp usuario a usuario, vamos a crear un archivo donde ir declarando los que podrán acceder.
+
+	userlist_enable=YES
+	userlist_file=/etc/vsftpd.userlist
+	userlist_deny=NO
+
+Escribimos el nombre del usuario dentro del archivo *userlist*
+
+	echo "usuario" | sudo tee -a /etc/vsftpd.userlist
+
+Reiniciamos el servicio
+
+	sudo systemctl restart vsftpd
+
+# Apache debe saber dónde están los archivos del usuario
+
+Editamos el archivo */etc/apache2/apache2.conf* y añadimos lo un directorio
+
+	<Directory /direcrtorio/del/usaurio/ftp/>
+			Options Indexes FollowSymLinks
+			AllowOverride None
+			Require all granted
+			Allow from all
+	</Directory>
+
+# Apache no puede ver los archivos subidos por *ftp*
+
+Por defecto los archivos se crean con permisos sólo para el usuario. Para que *Apache* pueda acceder a los archivos subidos, debemos indicarle a *vsftpd* que de permisos de lectura a los archivos subidos. En *vsfptd.conf* añadimos:
+
+	local_umask=022
+
+
+**Actividad 5**. Configura el servidor para que permita a un usuario subir archivos hasta su directorio raíz. Después, comprueba que funciona subiendo un archivo *.html*.

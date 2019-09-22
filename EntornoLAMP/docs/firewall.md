@@ -1,4 +1,5 @@
 # El firewall de Ubuntu UFW
+
 UFW = Uncomplicated Firewall
 
 La idea es simplificar la gestión de iptables.
@@ -18,6 +19,7 @@ Su estado por defecto es inactivo
 Después de esto, se queda activiado incluso en reinicios.
 
 ## Políticas por defecto
+
 - Permite salir a todo: 
 
 	$ sudo ufw default deny incoming
@@ -46,4 +48,5 @@ Aplicar una regla para un servicio
 	$ sudo ufw allow "Apache Full"
 
 ### Más información
+
 En Internet hay mucha más información. Ej. [Referencia de Ubuntu](https://help.ubuntu.com/community/UFW)

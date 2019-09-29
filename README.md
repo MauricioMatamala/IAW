@@ -18,7 +18,7 @@ Las unidades didácticas se irán añadiendo conforme se vaya avanzando en el te
 - SGBD. Instalación y configuración
 - Entorno LAMP
 
-#### 2. Introducción a los lenguajes de scripting en cliente y servidor. PHP
+#### 2. [Introducción a los lenguajes de scripting en cliente y servidor. PHP](IntroduccionPHP/README.md)
 - Netbeans
 - Introducción a PHP
 - Composer

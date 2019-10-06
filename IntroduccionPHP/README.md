@@ -143,8 +143,6 @@ Ver [documentación de referencia](https://www.w3schools.com/php/php_switch.asp)
 ## El operador ?
 Ver [documentación de referencia](https://www.w3schools.com/php/php_operators.asp
 
-<=== ME QUEDÉ POR AQUÍ
-
 ## While
 Ver [documentación de referencia](https://www.w3schools.com/php/php_looping.asp)
 

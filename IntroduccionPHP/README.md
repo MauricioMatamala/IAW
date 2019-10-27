@@ -240,3 +240,16 @@ Estos datos están dentro de un array bidimensional. Se necesita un programa que
 **Actividad 3.** Consulta en https://www.php.net/manual/es/array.sorting.php y busca la forma de que la tabla anterior se muestre ordenada por total vendido.
 
 **Actividad 4.** Reescribe el ejercicio 3, empleando sentencias iterativas.
+
+**Actividad 5.** Reescribe el ejercicio 2 utilizando orientación a objetos. Define primero la clase *Vendedor*, y después la clase *Tabla*. La clase Tabla incluye un array de *vendedores* así como los siguientes métodos:
+- getCabecera
+- getFila
+- getNumeroDeFilas
+
+**Actividad 6.** Revisa el ejercicio 5, utilizando una base de datos como motor de persistencia.
+
+**Actividad 7.** Escribe un programa que pueda almacenar diferentes tipo de figuras geométricas: círculos, triángulos y cuadrados. Todas las figuras tienen un color, y tienen una manera particular de obtener el área. Escribe un programa que contenga un array de figuras geométricas. Deberás recorrer el array e imprimir para cada figura el tipo de figura de que se trata, su color y su área.
+
+**Actividad 8.** Se cuenta con una base de datos que contiene una tabla de noticias. Escribe el código necesario para insertar varias noticias, y después mostrarlas por pantalla. Asegúrate de que tu código emplea funciones para ello.
+
+**Actividad 9.** Crea un modelo para la tabla de noticias. Crea también una clase helper para la base de datos. Reescribe el ejercicio 5 empleando estos elementos.

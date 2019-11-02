@@ -241,15 +241,39 @@ Estos datos están dentro de un array bidimensional. Se necesita un programa que
 
 **Actividad 4.** Reescribe el ejercicio 3, empleando sentencias iterativas.
 
-**Actividad 5.** Reescribe el ejercicio 2 utilizando orientación a objetos. Define primero la clase *Vendedor*, y después la clase *Tabla*. La clase Tabla incluye un array de *vendedores* así como los siguientes métodos:
-- getCabecera
-- getFila
-- getNumeroDeFilas
+**Actividad 5.** Escribe un programa que pueda almacenar diferentes tipo de figuras geométricas: círculos, triángulos y cuadrados. Todas las figuras tienen un color, y tienen una manera particular de obtener el área. Escribe un programa que contenga un array de figuras geométricas. Deberás recorrer el array e imprimir para cada figura el tipo de figura de que se trata, su color y su área.
 
-**Actividad 6.** Revisa el ejercicio 5, utilizando una base de datos como motor de persistencia.
+**Actividad 6.** Reescribe el ejercicio 2 utilizando orientación a objetos. Define primero la clase *Vendedor*, y después la clase *Tabla*. 
 
-**Actividad 7.** Escribe un programa que pueda almacenar diferentes tipo de figuras geométricas: círculos, triángulos y cuadrados. Todas las figuras tienen un color, y tienen una manera particular de obtener el área. Escribe un programa que contenga un array de figuras geométricas. Deberás recorrer el array e imprimir para cada figura el tipo de figura de que se trata, su color y su área.
+La clase *Vendedor* incluye un array llamado *ventas* que almacena las ventas de cada día de la semana. Además, incluye los siguientes métodos.
+- *getVentasLunes()* - Devuelve el contenido de la primera posición del array *ventas*.
+- *getVentasMartes()* - Devuelve el contenido de la segunda posición del array *ventas*.
+- *getVentasMiercoles()* - Devuelve el contenido de la tercera posición del array *ventas*.
+- *getVentasJueves()* - Devuelve el contenido de la cuarta posición del array *ventas*.
+- *getVentasViernes()* - Devuelve el contenido de la quinta posición del array *ventas*.
+- *getTotalVentas()* - Devuelve la suma total de las ventas durante la semana.
 
-**Actividad 8.** Se cuenta con una base de datos que contiene una tabla de noticias. Escribe el código necesario para insertar varias noticias, y después mostrarlas por pantalla. Asegúrate de que tu código emplea funciones para ello.
+La clase Tabla incluye un array de *vendedores* así como los siguientes métodos:
+- *getCabecera()* - Devuelve la cabecera html de la tabla. Es decir, una cadena de texto del tipo "<tr><th>Vendedor</th><th>L</th>..."
+- *getFila($i) - devuelve la fila número *$i*, con los datos del vendedor. 
+> Recuerda que en el array *vendedores* hay objetos de tipo vendedor, con toda la información que necesitas.
+- *getNumeroDeFilas()* - devuelve el tamaño del array *vendedores*.
 
-**Actividad 9.** Crea un modelo para la tabla de noticias. Crea también una clase helper para la base de datos. Reescribe el ejercicio 5 empleando estos elementos.
+Utilizando estas clases, obtén por pantalla una tabla como la de la actividad 2.
+
+**Actividad 7.** Revisa el ejercicio 6, utilizando una base de datos como motor de persistencia. Es decir, los datos han sido previamente insertados en una base datos, son leídos desde ella y mostrados por pantalla partiendo del código de la actividad 6. 
+
+**Actividad 8.** Se cuenta con una base de datos que contiene una tabla de noticias que contiene un título, un contenido y un autor. Escribe los siguientes componentes:
+- Crea una página llamada *insertar_noticias.php* con un formulario para insertar nuevas noticias. Los datos deben ser enviados con el método *POST*. 
+- Escribe una clase llamada *Noticia* para almacenar la información de una noticia. La clase debe contar, además de los campos necesarios para almacenar una noticia, los *getters* y *setters* necesarios y un método llamado *insert* que almacene la información en la base de datos. Esta clase debe estar en un archivo llamado *noticia_model.php*
+- Escribe un archivo llamado *noticia_controller.php* que se encargue de tomar los datos del formulario, instanciar la clase *Noticia* y almacenarla en la base de datos a través de dicha clase.
+
+**Actividad 9 (opcional).** Partiendo del ejercicio anterior, crea una página llamada *mostrar_noticias.php*, que muestre las noticias almacenadas en la base de datos. La forma de organizar el código debe ser el siguiente:
+- Crea una clase llamada *NoticiasModel*, almacenada en el archivo *noticias_model.php* que cuenta con los siguientes elementos:
+    - Un array de noticias llamado *noticias*. 
+    - Un método llamado *select* que obtiene las noticias almacenadas en la base de datos y las almacena en el array *noticias*. 
+    - Un método llamado *numeroDeNoticias* que devuelve el número total de noticias almacenadas en el array.
+    - Un método llamado *getNext* que devuelve la siguiente noticia. La primera vez que se ejecuta, devuelve la primera noticia, y cada vez que se vuelve a ejecutar, se devuelve la siguiente, hasta que no queden más, en cuyo caso devuelve *null*
+    - Un método llamado *hasNext* que devuelve verdadero o falso dependiendo de si se han devuelto o no todas las noticias.
+    - Un método *reset* que reestablece el índice de consulta al principio.
+- Debes utilizar el archivo *noticias_controller.php* que se encargue de cargar los datos en una instancia de la clase *Noticias*, y después importe el archivo *mostrar_noticias.php*, que se encarga de mostrar las noticias.

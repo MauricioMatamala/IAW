@@ -255,7 +255,7 @@ La clase *Vendedor* incluye un array llamado *ventas* que almacena las ventas de
 
 La clase Tabla incluye un array de *vendedores* así como los siguientes métodos:
 - *getCabecera()* - Devuelve la cabecera html de la tabla. Es decir, una cadena de texto del tipo "<tr><th>Vendedor</th><th>L</th>..."
-- *getFila($i) - devuelve la fila número *$i*, con los datos del vendedor. 
+- *getFila($i)* - devuelve la fila número *$i*, con los datos del vendedor. 
 > Recuerda que en el array *vendedores* hay objetos de tipo vendedor, con toda la información que necesitas.
 - *getNumeroDeFilas()* - devuelve el tamaño del array *vendedores*.
 

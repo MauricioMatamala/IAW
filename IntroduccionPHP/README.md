@@ -216,6 +216,31 @@ Ver [documentación de referencia](https://www.w3schools.com/php/php_mysql_delet
 ### Update data
 Ver [documentación de referencia](https://www.w3schools.com/php/php_mysql_update.asp)
 
+## Clases
+Ver [documentación de referencia](https://www.tutorialrepublic.com/php-tutorial/php-classes-and-objects.php)
+
+## Constantes en una clase
+Ver [documentación de referencia](https://www.w3schools.com/php/php_oop_constants.asp)
+
+## Métodos estáticos
+Ver [documentación de referencia](https://www.w3schools.com/php/php_oop_static_methods.asp)
+
+## Atributos estáticos
+Ver [documentación de referencia](https://www.w3schools.com/php/php_oop_static_properties.asp)
+
+## Visibilidad
+- *public* puede verse en cualquier parte.
+- *protected* solo puede referenciarse desde la clase y desde las subclases.
+- *private* solo puede referenciars desde la misma clase.
+
+
+## Herencia
+Ver [documentación de referencia](https://www.w3schools.com/php/php_oop_inheritance.asp)
+
+## parent
+Ver [documentación de referencia](http://docs.php.net/manual/da/keyword.parent.php)
+
+
 **Actividad 1.** Los comerciales Isabel Castillo y Vicente Calzado han realizado las siguientes ventas (en unidades) durante esta semana:
 
 Isabel: 7, 7, 10, 6, 4 Vicente: 4, 7, 5, 4, 5

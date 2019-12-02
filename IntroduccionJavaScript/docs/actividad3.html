@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Relato</title>
+    <style type="text/css">
+        .capitulo{
+            font-family:sans-serif;
+            color:red;
+        }
+
+        div.indice{
+            border:1px solid black;
+        }
+
+        a.entradaIndice:hover{
+            font-weight:bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1 id="titulo">Dos por tres calles</h1>
+
+<h2 class="capitulo">Capítulo 1. La primera calle</h2>
+<p>Era una sombría noche del mes de agosto. Ella, inocente cual mariposa que surca el cielo en busca de libaciones...</p>
+
+<h2 class="capitulo">Capítulo 2. La segunda calle</h2>
+
+<p>Era una oscura noche del mes de septiembre. Ella, inocente cual abejilla que surca el viento en busca del néctar de las flores...</p>
+
+<h2 class="capitulo">Capítulo 3. La tercera calle</h2>
+
+<p>Era una densa noche del mes de diciembre. Ella, cándida cual abejilla que surca el espacio en busca de bichejos para comer...</p>
+<script type="text/javascript">
+    const capitulos = document.getElementsByClassName("capitulo")
+
+    if (capitulos != null){
+        const tituloPrincipal = document.getElementById("titulo")
+        const lista = document.createElement("ul")
+        for (let i=0; i<capitulos.length; i++){
+            let capitulo =  capitulos.item(i)
+            colocarPuntoDeReferencia(capitulo,"cap"+i)// crear <a name="cap0"></a> y ponerlo delante del capítulo.
+            let li = document.createElement("LI")
+            let a = document.createElement("A")
+            a.setAttribute("href","#cap"+i)
+            a.setAttribute("class","entradaIndice")
+            a.innerText = capitulo.innerText
+            li.appendChild(a)
+            lista.appendChild(li)
+        }
+        tituloPrincipal.parentNode.insertBefore(lista,tituloPrincipal.nextSibling)
+    }
+
+    function colocarPuntoDeReferencia(capitulo,textoEnlace){
+        let referencia = document.createElement("A")
+        referencia.setAttribute("name",textoEnlace)
+        capitulo.parentElement.insertBefore(referencia,capitulo)
+    }
+
+</script>
+</body>
+</html>

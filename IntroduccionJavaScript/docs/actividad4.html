@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Actividad 4</title>
+</head>
+<body>
+<img id="carrusel" src="img1.png">
+
+<script type="text/javascript">
+
+    const imagenes = ["img1.png","img2.png","img3.png","img4.png","img5.png","img6.png"];
+    const img = document.getElementById("carrusel")
+    img.addEventListener("click",manejadorCarrusel)
+
+    function manejadorCarrusel(event){
+        let elementoImg = event.target
+        let imagenActual = elementoImg.getAttribute("src")
+        elementoImg.setAttribute("src",imagenes[(imagenes.indexOf(imagenActual)+1)%imagenes.length])
+        /*for (let i = 0; i<imagenes.length;i++){
+            if (imagenActual == imagenes[i]){
+                let siguienteImagen = imagenes[(i+1)%imagenes.length]
+                console.log(siguienteImagen)
+                elementoImg.setAttribute("src",siguienteImagen)
+            }
+        }*/
+    }
+</script>
+
+</body>
+</html>

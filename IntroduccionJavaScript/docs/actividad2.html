@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Actividad 2</title>
+</head>
+<body>
+<script type="text/javascript">
+    var nombre = "Sergey Brin";
+    var email = "sergey.brin@gmail.com";
+    var password = "Gato200!";
+
+    function checkNombre(nombre){
+        let regex = /[.:_\-!?]/g;
+        if (nombre.match(regex) != null)
+            return "El nombre contiene símbolos prohibidos"
+        else
+            return "El nombre es correcto"
+
+    }
+
+    function checkEmail(email){
+        let regex = /[a-zA-Z0-9.\_\-]+@[a-zA-Z]+.[a-zA-Z]{3}/
+        if (regex.test(email))
+            return "El email es correcto."
+        else
+            return "El email contiene símbolos prohibidos o su estructura no es correcta"
+    }
+
+    function contarMayusculas(password){
+        let mayusculasRegex = /[A-Z]/g;
+        if (password.match(mayusculasRegex) !=  null)
+            return password.match(mayusculasRegex).length
+        else
+            return 0
+    }
+
+    function contarMinusculas(password){
+        let minusculasRegex = /[a-z]/g;
+        if (password.match(minusculasRegex) != null)
+            return password.match(minusculasRegex).length
+        else
+            return 0
+    }
+
+    function contarNumeros(password){
+        let numerosRegex = /[0-9]/g;
+        if (password.match(numerosRegex) != null)
+            return password.match(numerosRegex).length
+        else
+            return 0
+    }
+
+    function contarSimbolos(password){
+        let símbolosRegex = /[!"·$%&\/()=?¿*ç|@#~½¬{[\]}_-]/g;
+        if (password.match(símbolosRegex) != null)
+            return password.match(símbolosRegex).length
+        else
+            return 0;
+    }
+
+    function checkPassword(password){
+        if ((contarMayusculas(password) > 0) &&
+            (contarMinusculas(password) > 0) &&
+            (contarNumeros(password) > 0) &&
+            (contarSimbolos(password) > 0))
+            return "La contraseña es correcta"
+        else
+            return "La contraseña es demasiado corta, no es suficientemente segura o contiene símbolos prohibidos"
+    }
+
+    function mostrarCartel(texto){
+        let p = document.createElement("P")
+        p.innerText = texto;
+        document.getElementsByTagName("BODY").item(0).appendChild(p)
+    }
+
+    var mensajeNombre = checkNombre(nombre);
+    var mensajeEmail = checkEmail(email);
+    var mensajePassword = checkPassword(password);
+
+    mostrarCartel(mensajeNombre);
+    mostrarCartel(mensajeEmail);
+    mostrarCartel(mensajePassword);
+</script>
+</body>
+</html>

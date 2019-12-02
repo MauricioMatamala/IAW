@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Regex</title>
+    <style type="text/css">
+        .error{
+            color:red;
+        }
+    </style>
+</head>
+<body>
+<form method="get" action="noexiste.php">
+    Nombre <input type="text" id="nombre" name="nombre"><br>
+    Apellidos <input type="text" id="apellidos" name="apellidos"><br>
+    Contraseña <input type="password" id="contraseña" name="contraseña"><br>
+    DNI <input type="text" id="dni" name="dni"><br>
+    Edad <input type="number" id="edad" name="edad"><br>
+    <input type="submit" id="submit">
+</form>
+
+<script type="text/javascript">
+
+    function evaluarRegex(regex,cadena){
+        return regex.test(cadena)
+    }
+
+    function contarCaracteres(regex,cadena){
+        if (cadena.match(regex) != null)
+            return cadena.match(regex).length
+        else
+            return 0
+    }
+
+    function colocarMensajeDetrásDe(elementoReferencia,mensaje){
+        let mensajeSpan = document.createElement("SPAN")
+        mensajeSpan.setAttribute("class","error")
+        mensajeSpan.innerText = mensaje
+        elementoReferencia.parentElement.insertBefore(mensajeSpan,elementoReferencia.nextSibling)
+    }
+
+     function validarContraseña(contraseña){
+
+        let numeroMayúsculas = contarCaracteres(/[A-Z]/,contraseña)
+        let numeroMinúsculas = contarCaracteres(/[a-z]/,contraseña)
+        let numeroNúmeros = contarCaracteres(/[0-9]/,contraseña)
+        let numeroEspeciales = contarCaracteres(/[\-!@#\$%^&\*(),.\?":{}\|<>]/,contraseña)
+        return (numeroMayúsculas > 0) && (numeroMinúsculas > 0) && (numeroNúmeros > 0) && (numeroEspeciales > 0);
+    }
+
+    function validarEdad(edad){
+        return (0 <= edad) && (edad < 120)
+    }
+
+    function validarForm(event){
+        // Limpiar mensajes anteriores
+        let mensajesAnteriores = document.getElementsByClassName("error")
+        while (mensajesAnteriores.length > 0)
+            mensajesAnteriores.item(0).parentNode.removeChild(mensajesAnteriores.item(0))
+
+        // Validar inputNombre
+        let inputNombre = document.getElementById("nombre")
+        let nombreValidado = evaluarRegex(/^[a-zA-Z .]+$/,inputNombre.value)
+        if (!nombreValidado) colocarMensajeDetrásDe(inputNombre,"El nombre sólo puede contener letras, puntos y espacios en blanco")
+
+        // Validar inputContraseña
+        let inputContraseña = document.getElementById("contraseña")
+        let contraseñaValidada = validarContraseña(inputContraseña.value);
+        if (!contraseñaValidada) colocarMensajeDetrásDe(inputContraseña,"La contraseña debe tener una longitud superior a 5 así como mayúsculas, minúsculas, números y símbolos especiales.")
+
+        // Validar inputApellido
+        let inputApellido = document.getElementById("apellidos")
+        let apellidosValidados = evaluarRegex(/^[a-zA-Z ]+$/,inputApellido.value)
+        if (!apellidosValidados) colocarMensajeDetrásDe(inputApellido,"Los apellidos sólo pueden contener letras y espacios en blanco")
+
+        // Validar DNI
+        let inputDni = document.getElementById("dni")
+        let dniValidado = evaluarRegex(/^[0-9]{8}[A-Z]$/,inputDni.value)
+        if (!dniValidado) colocarMensajeDetrásDe(inputDni,"El formato del DNI debe ser '12345678A'")
+
+        // Validar edad
+        let inputEdad =  document.getElementById("edad")
+        let edadValidada = validarEdad(inputEdad.value)
+        if (!edadValidada) colocarMensajeDetrásDe(inputEdad,"La edad debe estar entre 0 y 120")
+
+        let valores = [nombreValidado,contraseñaValidada,apellidosValidados,dniValidado,edadValidada]
+        console.log(valores)
+
+        if ((!nombreValidado) || (!contraseñaValidada) || (!apellidosValidados) || (!dniValidado) || (!edadValidada))
+            event.preventDefault()
+
+    }
+
+    const botónEnviar = document.getElementById("submit")
+    botónEnviar.addEventListener("click",validarForm)
+
+</script>
+</body>
+</html>

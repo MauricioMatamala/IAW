@@ -46,6 +46,29 @@ Por otra parte, el atributo *status* hace referencia al código de estado de la 
 xhrequest.send();
 
 ```
+-----------------------------
+
+**Actividad 1.** Una página permite consultar vehículos en un depósito de embargos. Los vehículos pueden ser:
+- Coches
+- Barcos
+- Motocicletas
+El proceso funciona en dos pasos. En un primer formulario, se consultan todos los vehículos de un cierto tipo, mostrando una lista de número de identificación. En el segundo formulario se consultan los datos del vehículo a partir su número de identificación. 
+
+Los datos asociados a un vehículo son similares a los siguientes:
+- Tipo: coche
+- Nº de id: X33F132A-Z
+- Propietario: Juan José Antúnez
+- DNI: 55667788C
+- Estado: embargado
+
+La página podría tener un aspecto como el siguiente:
+
+![activivdad1-ajax.png](img/actividad1-ajax.png)
+
+NOTA: Los estados posibles son "embargado", "pendiente de subasta" y "vendido"
+
+Utiliza AJAX para resolver el problema. 
+
 
 ### 4. Objetos en JavaScript
 

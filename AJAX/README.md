@@ -29,13 +29,15 @@ if (xhrequest.readyState == 4 && xhrequest.status == "200") {
 }
 ```
 El atributo *readyState* puede tener diferentes valores, dependiendo del estado de la conexión. La siguiente tabla lo muestra:
-Value |	State	            |   Description
-------|---------------------|----------------
-0	  |  UNSENT	            |   An XMLHttpRequest object has been created, but the open() method hasn't been called yet (i.e. request not initialized).
-1	  |  OPENED	            |   The open() method has been called (i.e. server connection established).
-2	  |  HEADERS_RECEIVED	|   The send() method has been called (i.e. server has received the request).
-3	  |  LOADING	        |   The server is processing the request.
-4	  |  DONE	            |   The request has been processed and the response is ready.
+
+| Value |	State	            |   Description |
+|-------|-----------------------|----------------|
+|0	    |  UNSENT	            |   An XMLHttpRequest object has been created, but the open() method hasn't been called yet (i.e. request not initialized).|
+|1	    |  OPENED	            |   The open() method has been called (i.e. server connection established).|
+|2	    |  HEADERS_RECEIVED	    |   The send() method has been called (i.e. server has received the request).|
+|3	    |  LOADING	            |   The server is processing the request.|
+|4	    |  DONE	                |   The request has been processed and the response is ready.|
+
 Por otra parte, el atributo *status* hace referencia al código de estado de la cabecera HTTP recibida desde el servidor: [Descripción de estados HTTP en mozilla.org](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
 
 ### 3. Envío de la solicitud

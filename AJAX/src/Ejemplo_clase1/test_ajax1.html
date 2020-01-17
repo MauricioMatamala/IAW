@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <input type="text" id="input"/>
+    <input type="button" id="enviar_info" value="enviar info"/>
+    <!--<input type="button" id="pedir_titulo" value="pedir título"/>-->
+    <img src="img1.png" id="imagen"/>
+    <p id="info_devuelta"></p>
+</body>
+
+<script type="text/javascript">
+    var xhreq = new XMLHttpRequest();
+
+    var input_consulta = document.getElementById("input");
+
+    var btn_enviar_info = document.getElementById("enviar_info");
+    btn_enviar_info.addEventListener("click",enviar_info);
+    var imagen = document.getElementById("imagen");
+    imagen.addEventListener("mouseover",pedir_imagen);
+    /**
+     * @param {Event} event
+     */
+    function enviar_info(event){
+        xhreq.open("GET","test_ajax1.php?q="+input_consulta.value);
+        xhreq.onreadystatechange = mostrar_info;
+        xhreq.send(null);
+    }
+
+    function mostrar_info(){
+        console.log("Ahora readyState vale " + xhreq.readyState);
+        if ((xhreq.readyState == 4) && (xhreq.status == 200))
+            document.getElementById("info_devuelta").innerHTML = xhreq.responseText;
+    }
+
+    function pedir_imagen(event){
+        xhreq.open("GET","test_ajax2.php?i="+imagen.getAttribute("src"));
+        xhreq.onreadystatechange = cambiar_imagen;
+        xhreq.send(null);
+    }
+
+    function cambiar_imagen(){
+        console.log("Estoy en cambiar_imagen");
+        if ((xhreq.readyState == 4) && (xhreq.status == 200))
+            imagen.setAttribute("src",xhreq.responseText);
+    }
+
+</script>
+
+</html>

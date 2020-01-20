@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        .cuadro_consulta, .cuadro_listado{
+            border:1px solid black;
+            padding:1em;
+            margin-top:2em;
+        }
+        .cuadro_listado{
+            background-color: azure;
+            padding-top:.25em;
+        }
+        .cuadro_listado p{
+            background-color:gray;
+            color:white;
+        }
+    </style>
+</head>
+<body>
+    <div class="cuadro_consulta">
+        <select id="slc_tipo_vehiculo">
+            <option value="coche">Coche</option>
+            <option value="barco">Barco</option>
+            <option value="motocicleta">Motocicleta</option>
+        </select>
+        <button id="btn_consulta_id_vehiculos">Consultar</button>
+    </div>
+    <div class="cuadro_listado">
+        <p>Listado de vehículos</p>
+        <div id="listado_ids"></div>
+    </div>
+    <div class="cuadro_consulta">
+        Número de id de vehículo
+        <input type="text" name="intxt_id_vehiculo" id="intxt_id_vehiculo">
+        <button id="btn_consultar_vehiculo">Consultar </button>
+    </div>
+    <div class="cuadro_listado">
+        <p>Datos del vehículo seleccionado</p>
+        <div id="listado_vehiculo"></div>
+    </div>
+<script type="text/javascript">
+    var xhReq = new XMLHttpRequest();
+
+    // Parte de "Listado de vehículos"
+
+    var btnConsultaIdVehiculos = document.getElementById("btn_consulta_id_vehiculos");
+    btnConsultaIdVehiculos.addEventListener("click",solicitarIdVehiculos);
+
+    function solicitarIdVehiculos(e){
+        var slcTipoVehiculo = document.getElementById("slc_tipo_vehiculo");
+        console.log(slcTipoVehiculo.value);
+        xhReq.open("GET","consulta_deposito.php?q=" + slcTipoVehiculo.value);
+        xhReq.onreadystatechange = mostrarIdVehiculos;
+        xhReq.send(null);
+    }
+
+    function mostrarIdVehiculos(){
+        if ((xhReq.readyState==4) && (xhReq.status == 200)){
+            let divListadoIds = document.getElementById("listado_ids");
+            divListadoIds.innerHTML = xhReq.responseText;
+        }
+    }
+
+    // Parte de "Datos del vehículo"
+
+    var btnConsultarVehiculo = document.getElementById("btn_consultar_vehiculo");
+    btnConsultarVehiculo.addEventListener("click",solicitarListaVehiculos);
+
+    function solicitarListaVehiculos(e){
+        let intxtIdVehiculo = document.getElementById("intxt_id_vehiculo");
+        console.log(intxtIdVehiculo.value);
+        xhReq.open("GET","consulta_deposito.php?id=" + intxtIdVehiculo.value);
+        xhReq.onreadystatechange = mostrarVehiculo;
+        xhReq.send(null)
+    }
+
+    function mostrarVehiculo(){
+        if ((xhReq.readyState==4) && (xhReq.status == 200)){
+            console.log(xhReq.responseText);
+            let divListadoVehiculo = document.getElementById("listado_vehiculo");
+            divListadoVehiculo.innerHTML = xhReq.responseText;
+        }
+    }
+</script>
+</body>
+</html>

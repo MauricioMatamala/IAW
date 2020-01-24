@@ -170,5 +170,14 @@ xhrequest.send(jsonEnviado)
     echo $json
 ```
 ----------
-**Actividad 1.** Escribe una pequeña aplicación web que calcule equivalencias entre centímetros y pulgadas. En una página html se mostrará una entrada de texto y un par de botones de radio que incluirán los textos "De cm a pulgadas" y "De pulgadas a cm". Además, hay un botón que activa el envío mediante AJAX de los valores del formulario al servidor. En el servidor se reciben los datos y se calcula la equivalencia y la resupuesta es enviada de vuelta a la página html, donde se mostrará el resultado mediante un cadena de texto del tipo:
+**Actividad 2.** Escribe una pequeña aplicación web que calcule equivalencias entre centímetros y pulgadas. En una página html se mostrará una entrada de texto y un par de botones de radio que incluirán los textos "De cm a pulgadas" y "De pulgadas a cm". Además, hay un botón que activa el envío mediante AJAX de los valores del formulario al servidor. En el servidor se reciben los datos y se calcula la equivalencia y la resupuesta es enviada de vuelta a la página html, donde se mostrará el resultado mediante un cadena de texto del tipo:
 "3 cm son 1.1811 pulgadas"
+
+**Actividad 3.** Escribe a realizar la actividad 1, pero usando en este caso el método POST, y objetos de JavaScript.
+
+**Actividad 4.** Escribe una aplicación para planificar los enfrentamientos entre un conjunto de equipos. El procedimiento es el siguiente:
+
+1. Se introducen los equipos que se deseen. Estos equipos van apareciendo en la página conforme se van añadiendo. 
+2. Cada equipo introducido es registrado en una base de datos.
+3. Junto a cada equipo se ofrece la posibilidad de eliminar uno de ellos. Si se elimina un equipo en la parte cliente, ésto debe quedar reflejado en la base de datos de la parte servidor.
+4. En la página hay un botón, llamado "diseñar enfrentamientos". Cuando se haga clic sobre él, debe realizarse una petición al servidor, que planificará los enfrentamientos. Cuando éstos hayan sido diseñados, se devolverá a la parte cliente en forma de JSON, donde se mostrarán los resultados.

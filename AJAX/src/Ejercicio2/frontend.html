@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Objetos 1</title>
+</head>
+<body>
+    <input type="number" id="number"/>
+    <div id="conversion_type">
+        <input type="radio" name="conversion" value="cm_to_inch"/> De centímetros a pulgadas<br/>
+        <input type="radio" name="conversion" value="inch_to_cm"/> De pulgadas a centímetros
+    </div>
+    <button id="evaluate">Calcular</button>
+    <p id="conversion_value"></p>
+<script type="text/javascript">
+
+    var evaluateButton = document.getElementById("evaluate");
+    evaluateButton.addEventListener("click",sendConversionRequest);
+
+    var xhReq = new XMLHttpRequest();
+
+    function sendConversionRequest(event){
+        let data = {
+            conversion_type: "",
+            value: 0
+        };
+        let radioButtons = document.getElementsByName("conversion");
+        let textField = document.getElementById("number");
+        let conversionType = "";
+        let checked = false;
+        for (i=0; i<radioButtons.length && checked==false; i++){
+            if (radioButtons[i].checked){
+                conversionType = radioButtons[i].value;
+                data.conversion_type = conversionType;
+                //data.conversion_type = radioButtons[i].value;
+                checked = true;
+            }
+        }
+        data.value = textField.value;
+        if (checked == true) {
+            xhReq.open("POST", "backend.php", true);
+            xhReq.onload = showConversionValue;//onreadystatechange = showConversionValue;
+            xhReq.send(JSON.stringify(data));
+        }
+    }
+
+    function showConversionValue(){
+        if (xhReq.status == 200){//((xhReq.readyState==4) && (xhReq.status == 200)){
+            let data = JSON.parse(xhReq.responseText);
+            let pConversionValue = document.getElementById("conversion_value");
+            console.log(data);
+            if (data.conversion_type=="cm_to_inch")
+                pConversionValue.innerText = "Equivalencia en pulgadas: " + data.value;
+            else if (data.conversion_type=="inch_to_cm")
+                pConversionValue.innerText = "Equivalencia en centímetros: " +  data.value;
+        }
+    }
+</script>
+</body>
+</html>

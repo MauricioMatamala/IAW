@@ -183,6 +183,119 @@ En el campo de texto *tecnología* se puedan introducir nombres de tecnologías.
 
 # Apéndices
 
+## Genaración de archivos PDF desde el servidor con FPDF - Generar documentos PDF
+
+La documentación de FPDF está en [http://www.fpdf.org/](http://www.fpdf.org/)
+El siguiente fragmento contiene código para generar un PDF:
+
+```
+<?php
+require "fpdf.php";
+
+class CreaPdf extends FPDF
+{
+    function Header()
+    {
+        $this->Image('politecnico-malaga.jpg',160,8,33);
+        $this->SetFont('Arial','B',15);
+        $this->Cell(80,10,'',1);
+        $this->Cell(30,10,utf8_decode('Título'),1,0,'C');
+        $this->Ln(20);
+    }
+
+    function Footer(){
+        $this->SetY(-15);
+        $this->SetFont('Arial','I',8);
+        $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
+    }
+}
+
+$pdf = new CreaPdf();
+$pdf->AliasNbPages();
+$pdf->AddPage();
+$pdf->SetFont('Courier','B',14);
+$pdf->Cell(0,10,'Un título');
+$pdf->Ln(40);
+$pdf->SetFont('Times','',12);
+for($i=1;$i<=40;$i++)
+    $pdf->Cell(0,10,utf8_decode('Imprimiendo línea número ').$i,1,1);
+
+header('Content-type: application/pdf');
+header('Content-Disposition: attachment; filename="myPDF.pdf');
+header('Cache-Control: private');
+header('Pragma: private');
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+
+$pdf->Output();
+```
+
+El fragmento donde generamos el documento PDF debe ser una clase que extiende a la clase FPDF.
+```
+class CreaPdf extends FPDF
+```
+En la clase *FPDF* están definidos los métodos *Header* y *Footer* aunque están vacíos. Por eso, hay que implementarlos.
+Los métodos más importantes son los siguientes:
+- *Image(string file [, float x [, float y [, float w [, float h [, string type [, mixed link]]]]]])*: Sirve para insertar una imagen. Sólo hace falta indicar el ancho, y se reajusta la altura propoorcionalmente.
+- *Cell(float w [, float h [, string txt [, mixed border [, int ln [, string align [, boolean fill [, mixed link]]]]]]])*: Sirve para incluir una celda (que contiene texto).
+    - Valores posibles de *border*
+        - 0: sin borde
+        - 1: con borde
+        - L: izquierda
+        - T: superior
+        - R: derecha
+        - B: inferior
+    - Valores posibles de *ln*: indica dónde debe empezar una celda.
+        - 0: a continuación.
+        - 1: en la siguiente línea.
+        - 2: debajo
+    - Valores posibles de *align*: 
+        - L: alineación izquierda.
+        - C: alineación centrada.
+        - R: alineación derecha.
+    - Valores posibles de *fill*:Indica si el fondo de la celda debe ser dibujada o no.
+        - true
+        - false
+    - Valores posibles de *link*: URL
+
+> Se pueden utilizar complementariamente los comandos *SetFillColor* y *SetTextColor*
+
+- *SetFont(string family [, string style [, float size]])*: si se incluye antes de *Cell* se puede modificar el tipo de letra.
+    - Valores posibles de *family*
+        - Courier (fixed-width)
+        - Helvetica o Arial (sinónimo; sans serif)
+        - Times (serif)
+        - Symbol (symbolic)
+        - ZapfDingbats (symbolic)  
+    - Valores posibles de *style*
+        - cadena vacia: regular
+        - B: bold
+        - I: italic
+        - U: underline
+    - *size*: tamaño en puntos
+- *AddPage([string orientation [, mixed size [, int rotation]]])*: Añade una nueva página al documento. Si la página ya está presente, el método Footer() es invocado primero para producir el pie de página. Entonces es añadida la página, la posición actual se establece en la esquina superior izquierda de acuerdo a los márgenes izquierda y superior, y el Header() es invocado para mostrar el encabezado.
+    - Valores posibles de *orientation*:
+        - P: Portrait
+        - L: Landscape
+    - Valores posibles de *size*:
+        - A3
+        - A4
+        - A5
+        - Letter
+        - Legal
+    - rotation: ángulo de rotación (múltiplo de 90)
+
+> NOTA: El origen del sistema de coordenadas es la esquina superior izquierda y se incrementan hacia abajo.
+
+- *Ln([float h])*: Ejecuta un salto de línea, donde h es la altura del salto. Por defecto, si *h* no se especifica mide lo mismo que la última celda impresa.
+
+- *AliasNbPages([string alias])*: Define un alias para el número total de páginas. Se sustituira en el momento que el documento se cierre. El valor por defecto es *{nb}*. Por ejemplo, el siguiente fragmento imprime el número de página y el total en formato 3/10.
+
+```
+        $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
+```
+
+
+
 ## Descarga de archivos mediante enventos, con AJAX.
 
 Es similar a cualquier llamada *AJAX* aunque con algunas diferencias:

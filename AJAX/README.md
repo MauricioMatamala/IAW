@@ -173,11 +173,395 @@ xhrequest.send(jsonEnviado)
 **Actividad 2.** Escribe una pequeña aplicación web que calcule equivalencias entre centímetros y pulgadas. En una página html se mostrará una entrada de texto y un par de botones de radio que incluirán los textos "De cm a pulgadas" y "De pulgadas a cm". Además, hay un botón que activa el envío mediante AJAX de los valores del formulario al servidor. En el servidor se reciben los datos y se calcula la equivalencia y la resupuesta es enviada de vuelta a la página html, donde se mostrará el resultado mediante un cadena de texto del tipo:
 "3 cm son 1.1811 pulgadas"
 
-**Actividad 3.** Escribe a realizar la actividad 1, pero usando en este caso el método POST, y objetos de JavaScript.
+**Actividad 3.** Vuelve a realizar la actividad 1, pero usando en este caso el método POST, y objetos de JavaScript.
 
-**Actividad 4.** Escribe una aplicación para planificar los enfrentamientos entre un conjunto de equipos. El procedimiento es el siguiente:
+**Actividad 4.** Escribe una página con una estructura similar a la siguiente:
 
-1. Se introducen los equipos que se deseen. Estos equipos van apareciendo en la página conforme se van añadiendo. 
-2. Cada equipo introducido es registrado en una base de datos.
-3. Junto a cada equipo se ofrece la posibilidad de eliminar uno de ellos. Si se elimina un equipo en la parte cliente, ésto debe quedar reflejado en la base de datos de la parte servidor.
-4. En la página hay un botón, llamado "diseñar enfrentamientos". Cuando se haga clic sobre él, debe realizarse una petición al servidor, que planificará los enfrentamientos. Cuando éstos hayan sido diseñados, se devolverá a la parte cliente en forma de JSON, donde se mostrarán los resultados.
+![activivdad4-ajax.png](img/actividad4-ajax.png)
+
+En el campo de texto *tecnología* se puedan introducir nombres de tecnologías. Estos nombres se van enviando al backend, que los guarda en la base de datos. Después, en el siguiente formulario, se puede insertar el nombre de un curso, y la tecnología que incluye. En el menú desplegable se ofrecerán las opciones incluidas en el campo *tecnología*. Cada nuevo curso que se vaya agregando, debe registrarse en una base de datos, y apareciendo en la parte inferior de la página.
+
+# Apéndices
+
+## Descarga de archivos mediante enventos, con AJAX.
+
+Es similar a cualquier llamada *AJAX* aunque con algunas diferencias:
+
+```
+    var d = document.getElementById("d");
+    const xhRec = new XMLHttpRequest();
+    d.addEventListener("click",downloadFile);
+
+    function downloadFile(a){
+        xhRec.responseType = "blob";
+        xhRec.onload = descargar;
+        xhRec.open("GET","descargar.php");
+        xhRec.setRequestHeader('Accept','image/jpeg');
+        xhRec.send();
+    }
+
+    function descargar(ev){
+        const type = xhRec.getResponseHeader('Content-Type');
+        const datos = xhRec.response;
+        const blob = new Blob([datos],{type});
+        const reader = new FileReader();
+        reader.onload = function(e){
+            //document.querySelector('img').setAttribute('src',e.target.result);
+            const a = document.createElement("A");
+            a.setAttribute("href",e.target.result);
+            a.setAttribute("download","ejemplo.jpg");
+            a.click();
+        }
+        reader.readAsDataURL(blob);
+    }
+```
+
+### Diferencias en la construcción de la llamada:
+
+- **[XMLHttpRequest.responseType](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType) = 'blob'**: la respuesta será una secuencia de datos binarios. Existen otros posibles valores detallados en [https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType)
+- **[HMLHttpRequest.setRequestHeader](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/setRequestHeader)('Accept','imagen/jpeg')**: establece una cabecera HTTP. En este caso, [Accept](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept), que indica qué tipo de contenido (expresado mediante un tipo [MIME](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types)). Se puede ver una lista de estos tipos en [https://www.geeksforgeeks.org/http-headers-content-type](https://www.geeksforgeeks.org/http-headers-content-type)
+> NOTA: setRequestHeader se debe establecer después de *XMLHttpRequest.open*.
+
+### Diferencias en el manejador de la llamada AJAX
+Los datos binarios del archivo son almacenados en un objeto de tipo *Blob*. Los datos son gestionados por un objeto de tipo *FileReader*, en este caso para provocar la descarga del archivo.
+
+#### 1. Creación y llenado del *Blob*
+Un [Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob) es un objeto de tipo "archivo" que contiene datos binarios brutos. Este objeto es inmutable, es decir, no se puede modificar. Los datos contenidos en un *blob* no tienen necesariamente formato nativo de JavaScript, ya que de hecho puede ser información relativa a una imagen, un programa, un archivo pdf, etc. 
+```
+    const type = xhRec.getResponseHeader('Content-Type'); // cabecera incluida desde el servidor.
+    const datos = xhRec.response;                         // datos enviados desde el servidor
+    const blob = new Blob([datos],{type});                // creación del Blob
+```
+#### 2. Creación del *FileReader* que gestionará el uso del *Blob*
+Un [FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader) es un objeto que permite a las aplicaciones web leer de manera asíncrona el contenido de archivos almacenados en el ordenador donde se ejecuta el cliente, usando objetos *File* o *Blob*. El *FileReader* implementa (entre muchos otros) el evento [load](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/onload) que se lanza cuando el contenido leido por *readAsArrayBuffer, readAsBinaryString, readAsDataURL or readAsText* está disponible.
+```
+    const reader = new FileReader();            // Creación del FileReader
+    reader.onload = function(e){                // Qué hacer cuando el archivo esté disponible
+        const a = document.createElement("A");
+        a.setAttribute("href",e.target.result);
+        a.setAttribute("download","ejemplo.jpg");
+        a.click();
+    }
+    reader.readAsDataURL(blob);                 // Lectura de los datos binarios como una URL
+                                                // De este modo se puede usar en href
+```
+
+##### El contenido de el manejador del evento *load* del *FileReader*
+Para forzar la descarga del archivo, se siguen los siguientes pasos:
+- Se crea un elemento *a*
+- Se le asigna al atributo *href* el contenido leído por el *FileReader*
+- Se le asigna el atributo *download* indicando el nombre del archivo descargado
+- Se lanza el envento *click* del enlace
+
+## Descarga de archivos (II). La parte del servidor
+
+# Descarga de ficheros
+
+Para mostrar un fichero, se utiliza la función *readfile('nombre_fichero')* Es importante incluir las cabeceras necesarias.
+
+```
+    header('Content-Type: application/octet-stream');
+    header('Content-Disposition: attachment; filename="' . basename($fichero) . '"');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate');
+    header('Content-Length: ' . filesize($fichero));
+
+    readfile($fichero);
+```
+
+Las cabeceras están descritas en [https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers)
+
+- *Content-Type*: Indicamos el contenido del fichero. Los navegadores pueden hacer esnifado MIME, por lo que puede no ser necesario. Se pueden ver en [https://www.geeksforgeeks.org/http-headers-content-type/](https://www.geeksforgeeks.org/http-headers-content-type/)
+- *Content-Disposition: attachment; filename="nombrefichero"*: indica si el contenido se mostrará como una página web, como una parte de una página web o como un archivo para descargar. Existen varias directivas:
+    - *name*: nombre de un campo HTML en un formulario al cual se refiere el contenido. Para la descarga de archivos no es necesario.
+    - *filename*: nombre del archivo.
+```
+Content-Disposition: form-data
+Content-Disposition: form-data; name="fieldName"
+Content-Disposition: form-data; name="fieldName"; filename="filename.jpg"
+```
+- *Expires*: contiene la fecha tras la cual la respuesa se considera caducada. Si se incluye el valor 0, se indica que el recurso ya está caducado. De esta forma, enviando un recurso caducado, podemos indicar en *Cache-Control* que el documento se debe descargar siempre.
+- *Cache-Control*: indica cómo debe actuar el cacheo. La opción *must-revalidate* indica que cuando un recurso está caducado, la caché no debe guardar una copia sin validarla en el servidor. Algunos valores posibles son:
+```
+    Cache-Control: must-revalidate
+    Cache-Control: no-cache
+    Cache-Control: no-store
+    Cache-Control: no-transform
+    Cache-Control: public
+    Cache-Control: private
+    Cache-Control: proxy-revalidate
+    Cache-Control: max-age=<seconds>
+    Cache-Control: s-maxage=<seconds>
+```
+- *Content-Length*: indica el tamaño de la entidad a enviar.
+
+## Subir archivos al servidor suando AJAX
+
+El proceso para subir un archivo al servidor empleando AJAX, requiere el uso de un objeto *FormData*. Los objetos FormData permiten compilar un conjunto de pares clave/valor para enviar mediante XMLHttpRequest. Están destinados principalmente para el envío de los datos de un formulario. El navegador construye un objeto de este tipo al ejecutar el método *submit*, y con *javascript* podemos crearlo manualmente.
+
+### Creación de un objeto FormData
+El uso de este objeto en el servidor es similar al envío de un formulario (mediante las variables *$_GET*, *$_POST* y *$_FILE*).
+
+```
+var formData = new FormData();
+
+// Añadiendo campos
+formData.append("username", "Groucho");
+formData.append("accountnum", 123456);
+
+// Añadiendo un archivo
+formData.append("userfile", fileInputElement.files[0]);
+
+// Envío de los datos
+var request = new XMLHttpRequest();
+request.open("POST", "http://foo.com/submitform.php");
+request.send(formData);
+```
+
+### Ejemplo de código para subir un archivo con AJAX y javascript
+
+```
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Envío de datos al servidor</title>
+</head>
+<body>
+
+<input type="file" name="image" id="afile" accept="image/*"/>
+
+<script>
+    document.querySelector('#afile').addEventListener('change', function(e) {
+        var file = this.files[0];
+
+        var fd = new FormData();
+        fd.append("image", file);
+        
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'handle_file_upload.php', true);
+
+        xhr.upload.onprogress = function(e) {
+            if (e.lengthComputable) {
+                var percentComplete = (e.loaded / e.total) * 100;
+                console.log(percentComplete + '% uploaded');
+            }
+        };
+
+        xhr.onload = function() {
+            if (this.status == 200) {
+                var resp = this.response;
+                console.log('Server got:', resp);
+            };
+        };
+
+        xhr.send(fd);
+    }, false);
+</script>
+<!--[if IE]>
+<script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+<script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>
+```
+### Descripción del código
+
+1. Restricción del tipo de archivos aceptados en el *input*.
+```
+<input type="file" name="image" id="afile" accept="image/*"/>
+```
+2. Manejador del evento *change* sobre el input.
+```
+document.querySelector('#afile').addEventListener('change', function(e) {
+```
+3. Recogida de los datos del input.
+```
+    var file = this.files[0];
+
+    var fd = new FormData();
+    fd.append("image", file);
+```
+4. Creación y configuración del objeto XMLHttpRequest. Se utiliza el evento *progress* para controlar el procentaje de subida. Para *onload* se loguea un mensaje de subida exitosa.
+```
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'handle_file_upload.php', true);
+
+        xhr.upload.onprogress = function(e) {
+            if (e.lengthComputable) {
+                var percentComplete = (e.loaded / e.total) * 100;
+                console.log(percentComplete + '% uploaded');
+                // Aquí se podría
+            }
+        };
+
+        xhr.onload = function() {
+            var resp = this.response;
+            console.log('Server got:', resp);
+        };
+    };
+```
+
+## Subida de archivo (II). La parte del servidor
+
+Para poder subir archivos, es preciso configurar la directiva *file_uploads = On* en el archivo de configuración de PHP (*php.ini*).
+
+Para la subida, si se ha enviado utilizando *FormData*, se puede acceder al contenido archivo, así como otra información, mediante la variabe *$_FILES*. Los campos principales que incluye esta variable son:
+
+- *\$_FILES['fichero_usuario']['name']*: El nombre original del fichero en la máquina del cliente.
+- *\$_FILES['fichero_usuario']['type']*: El tipo MIME del fichero, si el navegador proporcionó esta información. Un ejemplo sería "image/gif". Este tipo MIME, sin embargo, no se comprueba en el lado de PHP y por lo tanto no se garantiza su valor.
+- *\$_FILES['fichero_usuario']['size']*: El tamaño, en bytes, del fichero subido.
+- *\$_FILES['fichero_usuario']['tmp_name']*: El nombre temporal del fichero en el cual se almacena el fichero subido en el servidor.
+- *\$_FILES['fichero_usuario']['error']*: El código de error asociado a esta subida.
+
+Cuando el archivo se sube al servidor, éste es guardado en una carpeta temporal. Su nombre temporal se almacena en *\$_FILES['fichero_usuario']['tmp_name']*. Por ello es necesario mover el archivo desde su posición original hasta la definitiva, mediante la función *move\_uploaded\_file(\$file\_tmp,$file\_name)*.
+
+```
+<?php
+if(isset($_FILES['image'])){
+    $errors= array();
+    $file_name = $_FILES['image']['name'];
+    $file_size = $_FILES['image']['size'];
+    $file_tmp = $_FILES['image']['tmp_name'];
+    $file_type = $_FILES['image']['type'];
+    $file_ext=strtolower(end(explode('.',$_FILES['image']['name'])));
+
+    $extensions= array("jpeg","jpg","png");
+
+    if(in_array($file_ext,$extensions)=== false){
+        $errors[]="extension not allowed, please choose a JPEG or PNG file.";
+    }
+
+    if($file_size > 2097152) {
+        $errors[]='File size must be excately 2 MB';
+    }
+
+    if(empty($errors)==true) {
+        move_uploaded_file($file_tmp,$file_name);
+        echo __DIR__."/".$file_name;
+    }else{
+        print_r($errors);
+    }
+}
+```
+## Una nota de color. Uso de una barra de descarga.
+
+**Explicación general:**
+*El uso de una barra de descarga implica la descarga del archivo localmente. Durante la descarga al disco donde se ejecuta el cliente, se lanza una y otra vez el evento *progress* el objeto *XMLHttpRequest*. En cada uno de estos eventos se puede comprobar el valor de su atributo *loaded* y *total* (éste último debe ir indicado en la cabecera HTTP, mediante la directiva *Content-Length*). Utilizando estos dos valores, puede modificarse la barra de progreso.
+
+```
+<a id="descargar">Descargar</a>
+
+
+<script type="text/javascript">
+    var url_objeto;
+    var link = document.getElementById("descargar");
+    var xhreq = new XMLHttpRequest();
+
+
+    document.querySelector('#descargar').addEventListener("click",function(){
+
+        var descargado = link.getAttribute('download');
+        console.log(descargado);
+        if (descargado == null) {
+            var progressBar = document.createElement("PROGRESS");
+            progressBar.setAttribute("id", "progress");
+            progressBar.setAttribute("value", 0);
+            progressBar.setAttribute("max", 100);
+            progressBar.innerText = "0 %";
+            link.parentElement.insertBefore(progressBar, link.nextSibling);
+        }
+        
+        xhreq.open('get', 'descarga.php');
+        xhreq.responseType = 'blob';
+        xhreq.onreadystatechange = activarEnlaceParaDescarga;
+        if (descargado == null) xhreq.onprogress = modificarBarraDeProgreso;
+        else xhreq.onprogress = null;
+        xhreq.send();
+    })
+    
+
+    function activarEnlaceParaDescarga(e) {
+        if (xhreq.readyState == 4) {
+            url_objeto = URL.createObjectURL(xhreq.response);
+            console.log("url_objeto = " + url_objeto);
+            document.querySelector('#descargar').setAttribute('href', url_objeto);
+            document.querySelector('#descargar').setAttribute('download', 'descarga.pdf');
+
+            setTimeout(function () {
+                window.URL.revokeObjectURL(url_objeto);
+            }, 60 * 1000);
+        }
+    }
+
+    function modificarBarraDeProgreso(e) {
+        var porcentaje_completado = (e.loaded / e.total) * 100;
+        progressBar = document.getElementById("progress");
+        progressBar.setAttribute("value", porcentaje_completado);
+        progressBar.innerText = porcentaje_completado + "%";
+        if (porcentaje_completado == 100)
+            document.getElementById("progress").parentElement.removeChild(document.getElementById("progress"));
+    }
+</script>
+```
+
+### Explicación de las partes del script
+
+#### 1. Definición del manejador del evento *click* sobre el enlace.
+
+En primer lugar se comprueba si el enlace tiene el atributo *download*. Si lo tiene significa que el archivo ya ha sido descargado previamente.
+```
+ document.querySelector('#descargar').addEventListener("click",function(){
+        var descargado = link.getAttribute('download');
+        if (descargado == null) { ...
+```
+#### 2. Si el archivo no ha sido previamente descargado.
+Si el archivo no ha sido previamente descargado, se crea la barra de progreso, configura (máximo valor, valor inicial) y finalmente se coloca en el DOM.
+```
+            var progressBar = document.createElement("PROGRESS");
+            progressBar.setAttribute("id", "progress");
+            progressBar.setAttribute("value", 0);
+            progressBar.setAttribute("max", 100);
+            progressBar.innerText = "0 %";
+            link.parentElement.insertBefore(progressBar, link.nextSibling);
+```
+#### 3. Definición del manejador del evento *readyStateChange* del objeto *XMLHttpRequest*.
+La única diferencia con respecto a una llamada normal de AJAX es:
+- *XMLHttpRequest.responseType = 'blob'*: se indica que los datos recibidos son binarios.
+- *XMLHttpRequest.onprogress = manejador*: se configura el manejador de la barra de progreso.
+```
+        xhreq.open('get', 'descarga.php');
+        xhreq.responseType = 'blob';
+        xhreq.onreadystatechange = activarEnlaceParaDescarga;
+        if (descargado == null) xhreq.onprogress = modificarBarraDeProgreso;
+        else xhreq.onprogress = null;
+        xhreq.send();
+```
+#### 4. Manejador para la barra de progreso.
+
+```
+    function modificarBarraDeProgreso(e) {
+        var porcentaje_completado = (e.loaded / e.total) * 100;
+        progressBar = document.getElementById("progress");
+        progressBar.setAttribute("value", porcentaje_completado);
+        progressBar.innerText = porcentaje_completado + "%";
+        if (porcentaje_completado == 100)
+            document.getElementById("progress").parentElement.removeChild(document.getElementById("progress"));
+    }
+```
+#### 5. Manejador de la descarga, cuando está completa
+Cuando los *XMLHttpRequest.readyState == 4* se procede a activar el enlace para el copiado final del archivo. El archivo ya está almacenado localmente, y mediante el enlace se indica (mediante el atributo *download*) con qué nombre será guardado.
+
+```
+    function activarEnlaceParaDescarga(e) {
+        if (xhreq.readyState == 4) {
+            url_objeto = URL.createObjectURL(xhreq.response);
+            console.log("url_objeto = " + url_objeto);
+            document.querySelector('#descargar').setAttribute('href', url_objeto);
+            document.querySelector('#descargar').setAttribute('download', 'descarga.pdf');
+
+            setTimeout(function () {
+                window.URL.revokeObjectURL(url_objeto);
+            }, 60 * 1000);
+        }
+    }
+```

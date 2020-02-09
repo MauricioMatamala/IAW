@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tecnologias y Cursos</title>
+    <link href="bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-6">
+                <form>
+                    <div class="form-group">
+                        <label for="txt_tecnologia">Tecnología</label>
+                        <input type="text"  id="txt_tecnologia" class="form-control">
+                    </div>
+                    <button id="btn_enviar_tecnologia" class="btn btn-primary">Añadir</button>
+                </form>
+            </div>
+            <div class="col-6">
+                <form>
+                    <div class="form-group">
+                        <label for="txt_nombre_curso">Curso</label>
+                        <input type="text"  id="txt_nombre_curso" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <select class="custom-select" id="select">
+                            <option selected>Elija una opción</option>
+                        </select>
+                    </div>
+                    <button id="btn_enviar_curso" class="btn btn-primary">Enviar</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12" id="resumen"></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var btn_enviar_tecnologia = document.getElementById("btn_enviar_tecnologia");
+        var btn_enviar_curso = document.getElementById("btn_enviar_curso");
+
+        xhInit = new XMLHttpRequest();
+        xhInit.open("POST","backend-act4.php");
+        xhInit.onreadystatechange = function(e){
+            if ((xhInit.readyState == 4) && (xhInit.status == 200)){
+                let tecnologiasJSON = JSON.parse(xhInit.response);
+                console.log(tecnologiasJSON);
+                if (tecnologiasJSON.estado == 1){
+                    let tecnologias = tecnologiasJSON.datos;
+                    let select = document.getElementById("select");
+                    for (let i=0; i<tecnologias.length; i++){
+                        let nuevoOption = document.createElement("option");
+                        nuevoOption.setAttribute("value",tecnologias[i]);
+                        nuevoOption.innerText = tecnologias[i];
+                        select.appendChild(nuevoOption);
+                    }
+                } else {
+                    alert(tecnologiasJSON.datos[0]);
+                }
+            }
+
+        }
+        xhInit.send(JSON.stringify({consulta:'lista_tecnologias',datos:[]}));
+
+        btn_enviar_tecnologia.addEventListener("click",function(e){
+            e.preventDefault();
+            let xhTecnologia = new XMLHttpRequest();
+            xhTecnologia.open("POST","backend-act4.php");
+            xhTecnologia.onreadystatechange = function(e){
+                if ((xhTecnologia.readyState == 4) && (xhTecnologia.status == 200)){
+                    let result = JSON.parse(xhTecnologia.response);
+                    console.log(result);
+                    if (result.estado == 0)
+                        alert(result.datos[0]);
+                    else{
+                        let select = document.getElementById("select");
+                        let nuevoOption = document.createElement("option");
+                        nuevoOption.setAttribute("value",result.datos[0]);
+                        nuevoOption.innerText = result.datos[0];
+                        select.appendChild(nuevoOption);
+                    }
+
+                }
+            }
+            xhTecnologia.send(JSON.stringify({consulta:"tecnologia",datos:[document.getElementById("txt_tecnologia").value]}));
+        })
+
+        btn_enviar_curso.addEventListener("click",function(e){
+            e.preventDefault();
+            let xhCurso = new XMLHttpRequest();
+            xhCurso.open("POST","backend-act4.php");
+            xhCurso.onreadystatechange = function(e){
+                if ((xhCurso.readyState == 4) && (xhCurso.status == 200)) {
+                    let result = JSON.parse(xhCurso.response);
+                    if (result.estado == 0)
+                        alert(result.datos[0]);
+                    else {
+                        console.log(xhCurso.response);
+                        console.log(result.datos[0] + " (" + result.datos[1] + ")");
+                        let p = document.createElement("P");
+                        p.innerText = result.datos[0] + " (" + result.datos[1] + ")";
+                        let div_resumen = document.getElementById("resumen");
+                        div_resumen.appendChild(p);
+                    }
+                }
+            }
+            let nombreCurso = document.getElementById("txt_nombre_curso").value;
+            let tecnologia = document.getElementById("select").value;
+            xhCurso.send(JSON.stringify({consulta:"curso",datos:[nombreCurso,tecnologia]}));
+        })
+    </script>
+</body>
+</html>

@@ -265,3 +265,241 @@ history > history.txt
 
 Comprime el directorio en un archivo llamado Actividad_git.zip
 
+----------------------------------------------------------------------------------------
+
+# GitHub
+
+GitHub es un servicio de hosting para git. Está pensado para el trabajo colaborativo entre varios programadores.
+Clonar un repositorio
+
+Para clonar un repositorio nos basta con conocer su url. Por ejemplo, imaginemos que queremos descargar el proyecto https://github.com/chef/chef.git. En tal caso, solo es necesario que hagamos lo siguiente:
+
+```
+git clone https://github.com/chef/chef.git
+```
+
+## Crear una cuenta en GitHub
+
+Necesitamos crearnos una cuenta en GitHub. Crear una cuenta en GitHub no tiene nada de particular. Especificamos nuestro correo electrónico y una contraseña.
+
+Además, necesitamos al menos un repositorio donde subir nuestras fuentes.
+
+Para subir el proyecto solo tenemos que hacer lo siguiente, para compartirlo con el resto del equipo:
+
+```
+git remote add origin git@github.com:fulanito/repositorio
+```
+
+## Crear un nuevo repositorio
+
+Para crear un nuevo repositorio, podemos seguir la ayuda de GitHub en https://help.github.com/articles/create-a-repo/. Sólo hay un punto que aclarar, que es la opción "Intialize this repository with a README".
+
+Tenemos dos maneras de crear un nuevo repositorio:
+
+- Opción 1: Crear primero un nuevo repositorio en GitHub, seleccionando la opción "Initialize this repository with a README". Una vez creado, clonamos localmente el repositorio, añadimos los nuevos archivos y lo volvemos a subir.
+- Opción 2: Crear un repositorio en GitHub, y NO seleccionar la opción "Initialize this repository with a README", lo que creará un repositorio vacío en GitHub. Inicializamos nuestro proyecto localmente como un repositorio Git, y después los subimos a GitHub.
+
+Según ya tengamos un repositorio creado localmente o no, marcaremos la opción "Initialize this repository with a README". En nuestro caso, no vamos a marcarla, puesto que tenemos ya un repositorio creado localmente.
+
+Una vez que creamos el repositorio, GitHub nos ofrece ayuda sobre qué hacer. En nuestro caso, vamos a suponer que ya tenemos hecho al menos un "commit" en nuestro respositorio local. Así que para subir a GitHub nuestro repositorio, hacemos lo siguiente:
+
+```
+$ git remote add origin git@github.com:cuenta_usuario/repositorio.git
+$ git push origin master
+```
+
+Después de hacer esto, podremos ver algo como lo siguiente (si todo ha ido bien):
+
+```
+Counting objects: 15, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (11/11), done.
+Writing objects: 100% (15/15), 2.15 KiB | 0 bytes/s, done.
+Total 15 (delta 3), reused 0 (delta 0)
+To git@github.com:cuenta_usuario/repositorio.git
+ * [new branch]      master -> master
+Branch master set up to track remote branch master from origin.
+```
+
+De hecho ya podemos ver nuestros archivos en el repositorio.
+
+*origin* es el repositorio remoto, pero refiriéndolos al repositorio remoto. De este modo, podemos hablar de la rama *origin/master* para referirnos al último commit del repositorio remoto en la rama *master* que tenemos registrado en nuestro repositorio local. Por ejemplo, en el siguiente código podemos ver un repositorio en el que la rama master tiene ciertos cambios que origin/master no.
+
+```
+$ git log --oneline --decorate --graph --all
+* cd78ae4 (HEAD, master) Añadiendo el archivo TODO
+* f763def (origin/master, origin/HEAD) Initial commit
+Comprobar nuestros repositorios remotos
+```
+
+Para poder ver qué repositorios remotos tenemos configurados, podemos ejecutar el siguiente comando:
+
+```
+git remote -v
+```
+
+## Confirmando las ramas de nuestro repositorio
+
+Supongamos que tras clonar nuestro repositorio remoto, hemos hecho algunas modificaciones localmente. También vamos a suponer quen nadie ha modificado nada en el repositorio remoto. Ahora queremos subir los nuevos cambios. En este momento tenemos lo siguiente:
+
+- En el repositorio remoto, la rama master sigue en el sitio donde lo descargamos
+- En el repositorio local, la rama origin/master sigue apuntando al commit descargada.
+- En el repositorio local, la rama master apunta al último commit realizado localmente
+
+Para subir los nuevos cambios al repositorio remoto, haremos los siguiente:
+
+```
+$ git push origin nombre_rama
+```
+
+Supongamos que el árbol de nuestro repositorio y su contenido es el siguiente:
+
+```
+$ git log -p --decorate
+commit cd78ae4904c0302d4a8253e5b0d869c8f93a4da8 (HEAD, master)
+Author: Mauricio Matamala <mauriciomatamala@hotmail.com>
+Date:   Wed Jan 13 14:11:23 2016 +0100
+
+    Añadiendo el archivo TODO
+
+diff --git a/TODO b/TODO
+new file mode 100644
+index 0000000..359a564
+--- /dev/null
++++ b/TODO
+@@ -0,0 +1,4 @@
++Actividades que quedan por hacer
++================================
++
++1. Actividad 1.
+
+commit f763deff8c5e4863467cf863ef35bf027f126069 (origin/master, origin/HEAD)
+Author: mmatpein <mmatpein@users.noreply.github.com>
+Date:   Tue Jan 12 18:57:11 2016 +0100
+
+    Initial commit
+
+diff --git a/README.md b/README.md
+new file mode 100644
+index 0000000..ddc9403
+--- /dev/null
++++ b/README.md
+@@ -0,0 +1 @@
++# clase_github
+```
+
+Ahora supongamos que quiero hacer una propuesta de una idea en una rama nueva, para que el resto de componentes del equipo puedan verla. Para ello, creo primero una nueva rama.
+
+```
+$ git branch idea_feliz
+$ git checkout idea_feliz
+```
+
+Hago las modificaciones precisas, y luego subo la nueva rama.
+
+```
+$ git push git@github.com:mmatpein/clase_github.git idea_feliz
+```
+
+Si compruebo el estado del repositorio en GitHub, podré ver que hay una nueva rama llamada "idea_feliz"
+
+# Actualizaciones de colaboradores en el repositorio
+
+Supongamos un usuario colaborador descarga nuestro repositorio, realiza una modificación en la rama "master" y vuelve a subir el repositorio a GitHub. De forma que nosotros queremos actualizar la rama "origin/master". Entonces usaremos el siguiente comando:
+
+```
+$ git fecth origin
+```
+
+Con este comando obtenemos la rama "origin/master" así como el resto de ramas del repositorio. Pero "origin/master" todavía no coincide con "master". Para que esta rama sea también nuestra rama "master", tendremos que fusionar:
+
+```
+$ git merge origin/master
+```
+
+En este momento nuestro repositorio "master" ya coincide con "origin/master"
+
+El comando *git pull origin* es una forma abreviada de hacer:
+
+```
+$ git fetch origin
+$ git merge origin
+```
+
+# Fusionando ramas en github
+
+Supongamos que tenemos la rama "idea_feliz" sin fusionar en GitHub. Hemos hablado y estamos de acuerdo en que podemos fusionarla con la rama "master". Si queremos fusionar estas dos ramas, podemos hacerlo desde GitHub, o bien utilizando Git en nuestro repositorio local y luego subiendo los cambios. Los pasos a seguir son:
+
+### Paso 0: Asegurarnos de que tenemos la última versión de origin
+
+```
+$ git fetch origin
+$ git merge origin
+```
+
+### Paso 1: Fusionar la rama "idea_feliz" con "master".
+
+```
+$ git checkout master
+$ git merge idea_feliz
+```
+
+### Paso 2: Subir los cambios
+
+```
+$ git push origin master
+```
+
+Hecho esto, podremos ver en GitHub cómo se han fusionado los cambios, indicando la etiqueta "Merged" en la rama "idea_feliz".
+Flujo de trabajo en proyectos con GitHub
+
+En Git (y en GitHub) existe mucha libertad en la forma de trabajar. Por eso mismo, cuando el trabajo es entre varias personas, es necesario ponerse de acuerdo en cómo se va a utilizar. A estos acuerdos es a lo que llamamos workflow.
+
+Existe más de un workflow, aunque los más aceptados son git-flow y github-flow.
+
+# Git-Flow
+
+Podemos consultar sobre *GitFlow* en [A successful git branching model](http://nvie.com/posts/a-successful-git-branching-model)/. A grandes rasgos, el *workflow* propuesto por Vincent Driessen dice lo siguiente:
+
+- Cada desarrollador descarga y sube confirmaciones a un repositorio "origin", pero detrás de este modelo centralizado, se pueden formar subequipos que trabajen sobre ciertas ramas concretas, dejando a un lado las otras.
+- Las ramas principales son master y develop.
+    - origin/master contiene solamente versiones estables.
+    - origin/develop contiene versiones con los últimos cambios añadidos. De esta rama saldrán las versiones estables. Cuando el código en esta rama alcanza un punto estable que puede ser liberada, llega el momento de fusionar con la rama origin/master y etiquetado correctamente.
+
+- La rama master contiene únicamente versiones de producción, ya que solo se fusiona con origin/develop cuando el commit se hace para una versión estable.
+- Las ramas adicionales tiene tiempos de vida limitados, y su objetivo será hacer cosas como desarrollo coordinado entre varios miembros del equipo, fácil seguimiento del desarrollo de características concretas, preparar versiones de producción, solución rápida a problemas del software de producción, etc. Diferenciamos entre los siguientes tipos de ramas:
+    - Ramas feature: derivan de la rama develop y se vuelven a fusionar con ella. Tienen nombres del tipo feature-nombre_de_la_caracerística. Estas ramas suelen existir únicamente en el repositorio del programador.
+    - Ramas release: derivan de la rama develop y se fusiona con develop o con master. Tienen nombres del tipo release-nombre_de_la_versión. Esta rama se utiliza para preparar un versión de producción. Se crean cuando la rama develop está CASI a punto. Permiten hacer cosas como:
+        - Ultimar detalles de última hora
+        - Resolver bugs menores
+        - Asignar números de versión. Hasta este momento la rama release no deja claro si estamos hablando de la versión 0.3 o la versión 1.0.
+    - Ramas hotfix: derivan de la rama master y se fusionan con develop o con master. Tienen nombres como hotfix-nombre_de_la_revisión. Este tipo de ramas se crean cuando hay un problema crítico que hay que resolver inmediatamente en una versión de producción. Se crea la rama para este problema crítico, mientras el resto del equipo sigue trabajando por otro lado. Cuando se cierra una rama hotfix es importante fusionar con la rama master y con la rama develop para que la siguiente versión de desarrollo incluya esta revisión (si no, volveríamos en el futuro a tener el mismo problema crítico al liberar la versión de desarrollo).
+
+> Es importante recordar que cuando está abierta una rama release, la rama hotfix debe ser fusionada con la rama release.
+
+# GitHub flow
+
+El modelo propuesto por GitHut para GitHub puede consultarse en [https://guides.github.com/introduction/flow/](https://guides.github.com/introduction/flow/). A grandes rasgos, propone lo siguiente:
+
+- Cualquier cosa en la rama master es siempre desplegable en producción. Por eso, las ramas de trabajo deben derivarse de ésta.
+- Cuando se crea una nueva rama, avanzar por ella creando nuevos commits. Es importante cuidar los "commit messages", para que los demás sepan qué estamos haciendo.
+- Crear un pull request cuando queramos recibir feedback del resto del equipo. Lo podemos hacer en cualquier momento durante la existencia de la rama.
+- Una vez que se ha creado el pull request, podemos seguir creando commits conforme la conversación va avanzando.
+- Cuando el pull request ha dado lugar a un commit que pasa todos nuestros tests, podemos desplegar los cambios para comprobarlos en producción. Si la rama crea problemas, siempre podemos volver a desplegar la rama master
+- Una vez que hemos visto que el commit de nuestra rama es estable (ya que no ha dado problemas en producción), podemos fusionar con la rama master. Cada pull request conserva un histórico que permite entender que se hizo en su momento.
+
+---------------------------------------------------------------------
+**Actividad 1.** Crea un grupo con otras dos personas. Uno de vosotros gestionará la rama *develop*, *release* y *master*
+
+- Cada componente creará una nueva rama *feature*, donde creará varios commits con cambios sencillos (como añadir un nuevo archivo, por ejemplo).
+- Cada componente creará un pull request una vez que su rama *feature* esté lista para fusionar con la rama develop
+- El responsable de las ramas *develop*, *release* y *master* realizará las fusiones de las ramas *feature* con la rama *develop*
+- Una vez que la rama *develop* se haya fusionado con las diferentes ramas *feature*, deberá aplicarse el flujo de trabajo *git-flow*, de forma que se utilizarán las ramas *release* y *master* para liberar la primera versión (v0.0) del proyecto.
+- En la rama release añade cualquier cambio menor, simulando cambios de última hora.
+- El objetivo de este ejercicio es poder ver que los diferentes repositorios locales contienen información coherente con lo que contiene el repositorio en GitHub. Entrega la actividad en un archivo llamado Act1-github.zip, donde se debe incluir lo siguiente:
+    - Un archivo de texto con el nombre del repositorio.
+    - Una captura llamada <nombre_repositorio>_grafo.png con el resultado de ejecutar el comando git log --graph --all --oneline --decorate en tu repositorio local una vez que hayas terminado el ejercicio
+    - La misma captura obtenida por tus otros compañeros.
+
+-----------------------------------------------------------------------
+**Actividad 2.** Continua con el ejercicio anterior. Cada componente debe crear un parche de seguridad (hacer algún cambio sobre uno de los archivos) y seguir el modelo de GitFlow propuesto. Se debe partir de la última versión de master, y crear una nueva versión a cada corrección.

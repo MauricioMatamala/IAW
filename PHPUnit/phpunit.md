@@ -211,14 +211,14 @@ Los entornos IDE se integran con PHPUnit de diferente manera según el entorno. 
 
 Crea un proyecto de conversión de medidas similar al que creaste en el tema anterior. Sin embargo ahora deberás poner a prueba su funcionamiento, incluyen los casos límite. Las pruebas que debes realizar son las siguientes.:
 
-1 inch = 2,54 cm
-12 inch = 30,48 cm
-12 cm = 4,72 inc
-0 cm = 0 inch
-0,5 cm = 1,9685 inch
-Límite superior 40 inch: 41 inch = ERROR
-Límite superior 40 inch: 104 cm = ERROR
-Límite superior 101,6 cm: 101,6 cm = ERROR
+- 1 inch = 2,54 cm
+- 12 inch = 30,48 cm
+- 12 cm = 4,72 inc
+- 0 cm = 0 inch
+- 0,5 cm = 1,9685 inch
+- Límite superior 40 inch: 41 inch = ERROR
+- Límite superior 40 inch: 104 cm = ERROR
+- Límite superior 101,6 cm: 101,6 cm = ERROR
 
 -------------------------------
 

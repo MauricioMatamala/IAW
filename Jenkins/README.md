@@ -155,6 +155,34 @@ A partir de este momento, cada vez que hagamos un *push* al proyecto en GitHub, 
 5. La segunda tarea envia por SSH los archivos de código y el archivo *composer.json* al servidor de preproducción.
 6. Después, en dicho servidor (que en el ejemplo resulta ser el mismo... no hay presupuesto para tanta VPS (｡●́‿●̀｡)) se instalan las dependencias no-de-desarrollo, que serán necesarias para que el código pueda ejecutarse.
 
+---------------------------------------------
 
+Actividad final. Escribe una aplicación llamada ecuación. Esta aplicación calcula la tabla de valores de una ecuación de segundo grado. Como entrada se facilitarán los coeficientes a, b y c de una ecuación cuadrática con la forma *a + bx + cx²*. Como resultado, se mostrará por pantalla una tabla como la siguiente (para la ecuación 2x² + 3x + 5):
 
+x | y
+--|---
+0 | 5
+1 | 12
+2 | 19
+3 | 26
+4 | 33
+5 | 40
+6 | 47
+7 | 54
+8 | 61
+9 | 68
+10| 75
 
+> Para el cálculo debe utilizarse una clase en PHP llamada EcuacionGrado2. 
+
+El objetivo del ejercicio es el siguiente:
+
+1. Crear una página llamada index.html que incluya un formulario para introducir los coeficientes a, b y c. Esta página debe enviar los datos via AJAX al backend.
+2. En el backend habrá el código necesario para calcular la tabla de la ecuación. El resultado será enviado mediante JSON al frontend, que mostrará la tabla con los valores obtenidos.
+3. El backend contará con casos de prueba para comprobar que la clase *EcuacionGrado2* funciona correctamente. Debe utilizarse Composer para la instalación de las dependecias (en este caso PHPUnit como mínimo y cualquier otra dependencia que se considere necesario).
+4. Configurar un servidor Jenkins para automatizar el proceso de despliegue del proyecto. El proceso de integración descargará desde GitHub el proyecto, ejecutará los casos de prueba y mostrará los resultados de los casos de prueba. Una vez que los casos de prueba sean ejecutados, si éstos están en verde, se desplegarán en el servidor web de preproducción (que puede estar en la misma máquina).
+
+Entregar:
+
+1. El repositorio de GitHub donde está el proyecto.
+2. Una memoria de la configuración de Jenkins, de un modo similar a como está expuesto en este documento, con las aclaracioness necesarias.
